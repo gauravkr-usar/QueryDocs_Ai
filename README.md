@@ -202,6 +202,40 @@ The frontend dev server will launch at **`http://localhost:3000`**.
 
 ---
 
+## 🌐 Cloud Deployment Guide
+
+### 1. Deploy Backend on [Render](https://render.com) (or Railway)
+1. Go to **[Render Dashboard](https://dashboard.render.com)** $\rightarrow$ Click **New** $\rightarrow$ **Web Service**.
+2. Connect your GitHub repository: `https://github.com/gauravkr-usar/QueryDocs_Ai`.
+3. Select **Docker** environment (or let Render detect the root `Dockerfile` and `render.yaml`).
+4. Set the following environment variables in Render:
+   - `SPRING_PROFILES_ACTIVE`: `dev`
+   - `DB_URL`: Your PostgreSQL / Neon JDBC URL (e.g., `jdbc:postgresql://<neon-host>:5432/querydocs?sslmode=require`)
+   - `DB_USER`: Your database username
+   - `DB_PASSWORD`: Your database password
+   - `OPENAI_API_KEY`: Your OpenAI API key
+   - `GROQ_API_KEY`: Your Groq API key
+   - `GEMINI_API_KEY`: Your Gemini API key
+   - `JWT_SECRET`: A secure 256-bit secret string
+5. Click **Create Web Service**. Your backend will be available at `https://<your-app>.onrender.com`.
+
+---
+
+### 2. Deploy Frontend on [Vercel](https://vercel.com)
+1. Go to **[Vercel Dashboard](https://vercel.com/new)** $\rightarrow$ Click **Import** on `QueryDocs_Ai`.
+2. Configure project settings:
+   - **Framework Preset**: `Vite`
+   - **Root Directory**: `frontend/querydocs-frontend` (or leave root since `vercel.json` is configured)
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+3. Add Environment Variable:
+   - `VITE_API_BASE_URL`: `https://<your-backend-app>.onrender.com/api/v1`
+4. Click **Deploy**.
+5. Your frontend is live with automatic SSL and global CDN!
+
+---
+
+
 ## 🔌 API Endpoints Overview
 
 | Method | Endpoint | Description |

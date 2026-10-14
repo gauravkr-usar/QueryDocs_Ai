@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd frontend/querydocs-frontend && npm install && npm run build",
+  "outputDirectory": "frontend/querydocs-frontend/dist",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
