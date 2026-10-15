@@ -3,7 +3,8 @@
 spring:
   autoconfigure:
     exclude:
-      - org.springframework.ai.model.openai.autoconfigure.OpenAiEmbeddingAutoConfiguration
+      # Disable local ONNX Transformers embedding (causes OOM on Render free tier)
+      - org.springframework.ai.model.transformers.autoconfigure.TransformersEmbeddingModelAutoConfiguration
   datasource:
     url: ${DB_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/${DB_NAME:querydocs}}
     username: ${DB_USER:postgres}
@@ -31,13 +32,9 @@ spring:
         base-url: ${EMBEDDING_BASE_URL:https://api.openai.com}
         api-key: ${EMBEDDING_API_KEY:${OPENAI_API_KEY}}
         model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
-
-    embedding:
-      transformer:
-        tokenizer:
-          uri: ${TOKENIZER_URI:file:models/tokenizer.json}
-        onnx:
-          model-uri: ${MODEL_URI:file:models/model.onnx}
+        options:
+          # Match pgvector table dimension (384). text-embedding-3-small supports dimension reduction.
+          dimensions: ${EMBEDDING_DIMENSIONS:384}
 
     vectorstore:
       pgvector:
