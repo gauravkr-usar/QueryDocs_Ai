@@ -103,7 +103,9 @@ public class SecurityConfig {
         String methodsRaw = appProperties.getCors().getAllowedMethods();
         String headersRaw = appProperties.getCors().getAllowedHeaders();
 
-        // Support wildcard pattern "*" for origins with credentials
+        // Always use allowedOriginPatterns so wildcard "*" works even with Authorization headers.
+        // We do NOT call setAllowCredentials(true) because JWT is in the Authorization header,
+        // not in cookies — credentials mode is not needed and conflicts with wildcard origin.
         if ("*".equals(originsRaw.trim())) {
             config.addAllowedOriginPattern("*");
         } else {
@@ -114,11 +116,12 @@ public class SecurityConfig {
                 ? List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 : Arrays.asList(methodsRaw.split(",")));
 
-        config.setAllowedHeaders("*".equals(headersRaw.trim())
-                ? List.of("*")
-                : Arrays.asList(headersRaw.split(",")));
+        // Always allow Authorization + Content-Type + any custom header
+        config.setAllowedHeaders(List.of("*"));
 
-        config.setAllowCredentials(true);
+        // Expose Authorization so frontend can read response headers if needed
+        config.setExposedHeaders(List.of("Authorization"));
+
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
