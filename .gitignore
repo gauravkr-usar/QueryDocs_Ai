@@ -21,6 +21,9 @@ application-local.yml
 *.log
 logs/
 
+# Local ONNX model cache
+models/
+
 ### STS ###
 .apt_generated
 .classpath

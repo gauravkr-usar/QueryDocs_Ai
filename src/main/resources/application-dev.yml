@@ -32,6 +32,12 @@ spring:
         api-key: ${EMBEDDING_API_KEY:${OPENAI_API_KEY}}
         model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
 
+    embedding:
+      transformer:
+        tokenizer:
+          uri: ${TOKENIZER_URI:file:models/tokenizer.json}
+        onnx:
+          model-uri: ${MODEL_URI:file:models/model.onnx}
 
     vectorstore:
       pgvector:
