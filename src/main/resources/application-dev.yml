@@ -5,6 +5,8 @@ spring:
     exclude:
       # Disable local ONNX Transformers embedding (causes OOM on Render free tier)
       - org.springframework.ai.model.transformers.autoconfigure.TransformersEmbeddingModelAutoConfiguration
+      # Use CustomEmbeddingModel which supports Gemini (free) and OpenAI compatible APIs
+      - org.springframework.ai.model.openai.autoconfigure.OpenAiEmbeddingAutoConfiguration
   datasource:
     url: ${DB_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/${DB_NAME:querydocs}}
     username: ${DB_USER:postgres}
@@ -29,11 +31,11 @@ spring:
         model: ${CHAT_MODEL:openai/gpt-oss-120b}
         temperature: 0.2
       embedding:
-        base-url: ${EMBEDDING_BASE_URL:https://api.openai.com}
-        api-key: ${EMBEDDING_API_KEY:${OPENAI_API_KEY}}
-        model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
+        base-url: ${EMBEDDING_BASE_URL:https://generativelanguage.googleapis.com/v1beta/openai/v1}
+        api-key: ${EMBEDDING_API_KEY:${GEMINI_API_KEY:${OPENAI_API_KEY}}}
+        model: ${OPENAI_EMBEDDING_MODEL:gemini-embedding-001}
         options:
-          # Match pgvector table dimension (384). text-embedding-3-small supports dimension reduction.
+          # Match pgvector table dimension (384). gemini-embedding-001 supports 384 dimensions.
           dimensions: ${EMBEDDING_DIMENSIONS:384}
 
     vectorstore:
@@ -43,7 +45,7 @@ spring:
         dimensions: 384
         table-name: vector_store_v2
         schema-name: public
-        initialize-schema: true
+        initialize-schema: false
   servlet:
     multipart:
       max-file-size: 25MB

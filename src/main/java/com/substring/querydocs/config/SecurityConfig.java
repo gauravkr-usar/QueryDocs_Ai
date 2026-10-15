@@ -25,12 +25,16 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter authenticationFilter;
     private final AppProperties appProperties;
+
+    public SecurityConfig(JwtAuthenticationFilter authenticationFilter, AppProperties appProperties) {
+        this.authenticationFilter = authenticationFilter;
+        this.appProperties = appProperties;
+    }
 
 
     @Bean
