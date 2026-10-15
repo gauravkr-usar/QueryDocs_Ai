@@ -46,7 +46,10 @@ public class DocumentController {
             Authentication authentication
 
     ) {
-
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.<DocumentResponseDto>builder().success(false).message("Unauthorized").timestamp(java.time.LocalDateTime.now()).build());
+        }
         log.info("document uploading started:");
         User user = (User) authentication.getPrincipal();
 //        System.out.println(user.getUsername());
@@ -79,7 +82,10 @@ public class DocumentController {
             List<MultipartFile> files,
             Authentication authentication
     ) {
-
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.<List<DocumentResponseDto>>builder().success(false).message("Unauthorized").timestamp(java.time.LocalDateTime.now()).build());
+        }
         User user=(User)authentication.getPrincipal();
         List<DocumentResponseDto> responseDtos = documentService.uploadMultipleDocuments(files,user);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -103,6 +109,10 @@ public class DocumentController {
     public ResponseEntity<ApiResponse<List<DocumentMetadataDto>>> getAllDocumentOfLoggedInUser(
             Authentication authentication
     ){
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.<List<DocumentMetadataDto>>builder().success(false).message("Unauthorized").timestamp(java.time.LocalDateTime.now()).build());
+        }
         User user=(User)authentication.getPrincipal();
         java.util.List<DocumentMetadataDto> documents =documentService.getAllDocumentsByUser(user);
         return ResponseEntity.ok(

@@ -35,7 +35,10 @@ public class ChatController {
             @Valid @RequestBody ChatRequestDto requestDto,
             Authentication authentication
     ) {
-
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.<ChatResponseDto>builder().success(false).message("Unauthorized").timestamp(LocalDateTime.now()).build());
+        }
         User user=(User)authentication.getPrincipal();
         ChatResponseDto chatResponseDto = ragService.askQuestion(requestDto,user);
         return ResponseEntity.ok(
@@ -57,6 +60,9 @@ public class ChatController {
             @Valid @RequestBody ChatRequestDto requestDto,
             Authentication authentication
     ){
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return Flux.just("data: {\"error\":\"Unauthorized\"}\n\n");
+        }
         User user= (User) authentication.getPrincipal();
         return ragService.streamQuestionAnswer(requestDto,user);
     }
@@ -69,7 +75,10 @@ public class ChatController {
             Authentication authentication
 
     ) {
-
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.<SearchResultDto>builder().success(false).message("Unauthorized").timestamp(LocalDateTime.now()).build());
+        }
         User user= (User) authentication.getPrincipal();
         SearchResultDto results = ragService.searchSimilarChunks(request,user);
         return ResponseEntity.ok(

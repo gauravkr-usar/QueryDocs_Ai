@@ -90,13 +90,28 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<?> handleNullPointer(NullPointerException ex) {
+        logger.error("Null pointer - possibly unauthenticated request: ", ex);
+        // If authentication is null (JWT missing/invalid), principal cast throws NPE
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        ApiResponse.builder()
+                                .success(false)
+                                .message("Unauthorized: authentication required")
+                                .data(null)
+                                .timestamp(LocalDateTime.now())
+                                .build()
+                );
+    }
+
 //    generalized exception handling
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneric(Exception ex) {
-        logger.error("Unexpected error occurred: ", ex);
+        logger.error("Unexpected error occurred: {}", ex.getMessage(), ex);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(
                         ApiResponse.builder()
                                 .success(false)
