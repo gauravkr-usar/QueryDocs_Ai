@@ -60,8 +60,8 @@ public class SecurityConfig {
                                                 "/v3/api-docs/**",
                                                 "/swagger-ui/**",
                                                 "/swagger-ui.html").permitAll()
-                                        .requestMatchers("/api/v1/admin/**").hasRole(Role.ADMIN.toString())
-                                        .requestMatchers("/api/v1/**").hasRole(Role.USER.toString())
+                                        .requestMatchers("/api/v1/admin/**", "/admin/**").hasRole(Role.ADMIN.toString())
+                                        .requestMatchers("/api/v1/**", "/documents/**", "/chat/**").hasRole(Role.USER.toString())
                                         .anyRequest().authenticated()
                 )
                 .addFilterAfter(authenticationFilter, UsernamePasswordAuthenticationFilter.class)

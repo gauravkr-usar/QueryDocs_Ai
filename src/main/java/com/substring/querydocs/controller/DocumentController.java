@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController()
-@RequestMapping("/api/v1/documents")
+@RequestMapping({"/api/v1/documents", "/documents"})
 @Tag(
         name = "Document Management",
         description = "Endpoints for uploading, listing and managing documents and their vectors embeddings."

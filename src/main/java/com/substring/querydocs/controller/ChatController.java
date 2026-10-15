@@ -17,7 +17,7 @@ import javax.naming.directory.SearchResult;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/api/v1/chat")
+@RequestMapping({"/api/v1/chat", "/chat"})
 @Tag(
         name = "Chat Management",
         description = "All chat related apis goes here."
